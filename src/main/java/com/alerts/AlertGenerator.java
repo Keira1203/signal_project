@@ -35,18 +35,18 @@ public class AlertGenerator {
      * @param patient the patient data to evaluate for alert conditions
      */
     public void evaluateData(Patient patient) {
-        // Implementation goes here
+        // the comment that suggest to implement a thing, set todo first
+        // TODO: Implementation goes here
     }
 
     /**
-     * Triggers an alert for the monitoring system. This method can be extended to
-     * notify medical staff, log the alert, or perform other actions. The method
-     * currently assumes that the alert information is fully formed when passed as
-     * an argument.
-     *
-     * @param alert the alert object containing details about the alert condition
+     * the javadoc is too long so make it shorter
+     * Triggers alert notification for critical patient condition.
+     * 
+     * @param alert contains patient ID, condition, and severity details
      */
     private void triggerAlert(Alert alert) {
-        // Implementation might involve logging the alert or notifying staff
+        // put todo before the todo
+        // TODO: Implementation might involve logging the alert or notifying staff
     }
 }
