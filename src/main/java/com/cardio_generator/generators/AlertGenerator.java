@@ -4,15 +4,38 @@ import java.util.Random;
 
 import com.cardio_generator.outputs.OutputStrategy;
 
+/**
+ * generate the abnormal alert from possibility thinking
+ * 
+ * calculate the possibility with poisson and when once happen ,
+ * solve it with 90% of possibility.
+ * let remain continuous
+ */
 public class AlertGenerator implements PatientDataGenerator {
 
     public static final Random randomGenerator = new Random();
     private boolean[] AlertStates; // false = resolved, true = pressed
 
+    /**
+     * initialize all patients alert situation list
+     * 
+     * @param patientCount the number of patient
+     *                     start with all false(non alert)
+     */
     public AlertGenerator(int patientCount) {
         AlertStates = new boolean[patientCount + 1];
     }
 
+    /**
+     * update the certain patient alert situation and output
+     * 
+     * if no alert lambda=0.1 and check new alert happen or no
+     * if alert exists, solve with 90% possibility automatically
+     * output with "Alert", "triggered", "resolved"
+     * 
+     * @param patientId      the certain patient
+     * @param outputStrategy place to output
+     */
     @Override
     public void generate(int patientId, OutputStrategy outputStrategy) {
         try {

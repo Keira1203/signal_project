@@ -7,6 +7,12 @@ import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * TO save the data to the file
+ * 
+ * make independent file for each data and save it .
+ * the output directory is made automatically
+ */
 public class FileOutputStrategy implements OutputStrategy {
 
     // the name have to start with the lower case
@@ -17,11 +23,20 @@ public class FileOutputStrategy implements OutputStrategy {
     // for the second word should be upper case
     private final ConcurrentHashMap<String, String> fileMap = new ConcurrentHashMap<>();
 
+    /**
+     * set the directory for file output and initialize
+     * 
+     * @param baseDirectory the path of the saving folder if no exist, made
+     *                      automatically
+     */
     public FileOutputStrategy(String baseDirectory) {
 
         this.baseDirectory = baseDirectory;
     }
 
+    /**
+     * extra add to the certain patients file
+     */
     @Override
     public void output(int patientId, long timestamp, String label, String data) {
         try {
