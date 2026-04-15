@@ -69,4 +69,8 @@ public class Patient {
         return patientId;
     }
 
+    public void removeExpiredRecords(RetentionPolicy policy) {
+        patientRecords.removeIf(record -> policy.isExpired(record.getTimestamp()));
+    }
+
 }

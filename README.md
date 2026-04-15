@@ -70,7 +70,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## UML Models
 
 This repository includes UML class diagrams and design documentation for the
-Cardiovascular Health Monitoring System (CHMS) assignment.
+Cardiovascular Health Monitoring System assignment.
 
 The models cover four subsystems:
 - Alert Generation System

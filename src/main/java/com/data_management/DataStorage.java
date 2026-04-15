@@ -108,4 +108,11 @@ public class DataStorage {
             alertGenerator.evaluateData(patient);
         }
     }
+
+    public void deleteOldRecords(RetentionPolicy policy) {
+        for (Patient patient : patientMap.values()) {
+            patient.removeExpiredRecords(policy);
+        }
+    }
+
 }
