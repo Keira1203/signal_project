@@ -65,4 +65,17 @@ java -jar target/cardio_generator-1.0-SNAPSHOT.jar --patient-count 100 --output 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## Student ID
-- i6429490
+- i6429490  
+
+## UML Models
+
+This repository includes UML class diagrams and design documentation for the
+Cardiovascular Health Monitoring System (CHMS) assignment.
+
+The models cover four subsystems:
+- Alert Generation System
+- Data Storage System
+- Patient Identification System
+- Data Access Layer
+
+See the full diagrams and documentation here: [uml_models](./uml_models)

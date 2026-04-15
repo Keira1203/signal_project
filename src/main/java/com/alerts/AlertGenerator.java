@@ -1,7 +1,12 @@
 package com.alerts;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.data_management.DataStorage;
 import com.data_management.Patient;
+import com.data_management.PatientRecord;
 
 /**
  * The {@code AlertGenerator} class is responsible for monitoring patient data
@@ -11,6 +16,8 @@ import com.data_management.Patient;
  */
 public class AlertGenerator {
     private DataStorage dataStorage;
+    private AlertManager alertManager;
+    private Map<Integer, ThresholdRule> thresholdRules;
 
     /**
      * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
@@ -22,6 +29,12 @@ public class AlertGenerator {
      */
     public AlertGenerator(DataStorage dataStorage) {
         this.dataStorage = dataStorage;
+        this.alertManager = new AlertManager();
+        this.thresholdRules = new HashMap<>();
+
+        // an example personalized rule
+        thresholdRules.put(1, new ThresholdRule("SystolicPressure", 90, 140));
+        thresholdRules.put(2, new ThresholdRule("Saturation", 92, 100));
     }
 
     /**
@@ -35,8 +48,33 @@ public class AlertGenerator {
      * @param patient the patient data to evaluate for alert conditions
      */
     public void evaluateData(Patient patient) {
-        // the comment that suggest to implement a thing, set todo first
-        // TODO: Implementation goes here
+        if (patient == null) {
+            return;
+        }
+
+        int patientId = patient.getPatientId();
+        ThresholdRule rule = thresholdRules.get(patientId);
+
+        if (rule == null) {
+            return;
+        }
+
+        long now = System.currentTimeMillis();
+        List<PatientRecord> records = patient.getRecords(now - 60000, now);
+
+        for (PatientRecord record : records) {
+            boolean sameMetric = record.getRecordType().equals(rule.getMetricType());
+            boolean breached = rule.isBreached(record.getMeasurementValue());
+
+            if (sameMetric && breached) {
+                Alert alert = new Alert(
+                        String.valueOf(record.getPatientId()),
+                        record.getRecordType() + " out of threshold",
+                        record.getTimestamp());
+
+                triggerAlert(alert);
+            }
+        }
     }
 
     /**
@@ -46,7 +84,30 @@ public class AlertGenerator {
      * @param alert contains patient ID, condition, and severity details
      */
     private void triggerAlert(Alert alert) {
-        // put todo before the todo
-        // TODO: Implementation might involve logging the alert or notifying staff
+        if (alert == null) {
+            return;
+        }
+
+        alertManager.dispatchAlert(alert);
     }
+
+    /**
+     * Adds or updates a threshold rule for a patient.
+     *
+     * @param patientId the patient ID
+     * @param rule      the threshold rule to apply
+     */
+    public void setThresholdRule(int patientId, ThresholdRule rule) {
+        thresholdRules.put(patientId, rule);
+    }
+
+    /**
+     * Returns all configured threshold rules.
+     *
+     * @return the threshold rules map
+     */
+    public Map<Integer, ThresholdRule> getThresholdRules() {
+        return thresholdRules;
+    }
+
 }
