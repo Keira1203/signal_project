@@ -1,9 +1,14 @@
 package com.alerts;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Handles routing and dispatching alerts to medical staff.
  */
 public class AlertManager {
+
+    private List<Alert> alerts = new ArrayList<>();
 
     /**
      * Dispatches an alert to the appropriate destination.
@@ -15,6 +20,7 @@ public class AlertManager {
             return;
         }
 
+        alerts.add(alert);
         notifyStaff(alert);
     }
 
@@ -29,4 +35,9 @@ public class AlertManager {
                         + " | condition: " + alert.getCondition()
                         + " | timestamp: " + alert.getTimestamp());
     }
+
+    public List<Alert> getAlerts() {
+        return alerts;
+    }
+
 }

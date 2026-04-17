@@ -110,4 +110,8 @@ public class AlertGenerator {
         return thresholdRules;
     }
 
+    public AlertManager getAlertManager() {
+        return alertManager;
+    }
+
 }
