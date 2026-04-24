@@ -79,3 +79,6 @@ The models cover four subsystems:
 - Data Access Layer
 
 See the full diagrams and documentation here: [uml_models](./uml_models)
+
+## Week3 report
+The report of week3 is included in the docs folder
