@@ -9,6 +9,16 @@ import java.util.List;
 public class AlertManager {
 
     private List<Alert> alerts = new ArrayList<>();
+    private static AlertManager instance;
+
+    private AlertManager(){}
+
+    public static synchronized AlertManager getInstance(){
+        if(instance == null){
+            instance = new AlertManager();
+        }
+        return instance;
+    }
 
     /**
      * Dispatches an alert to the appropriate destination.

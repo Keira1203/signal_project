@@ -1,6 +1,7 @@
 package com.alerts;
 
 import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -17,7 +18,7 @@ import com.data_management.PatientRecord;
 public class AlertGenerator {
     private AlertManager alertManager;
     private Map<Integer, ThresholdRule> thresholdRules;
-
+    private List<AlertStrategy> strategies;
     /**
      * Constructs an {@code AlertGenerator} with a specified {@code DataStorage}.
      * The {@code DataStorage} is used to retrieve patient data that this class
@@ -27,8 +28,13 @@ public class AlertGenerator {
      *                    data
      */
     public AlertGenerator(DataStorage dataStorage) {
-        this.alertManager = new AlertManager();
+        this.alertManager = AlertManager.getInstance();
         this.thresholdRules = new HashMap<>();
+        this.strategies = new ArrayList<>();
+
+        strategies.add(new BloodPressureStrategy());
+        strategies.add(new OxygenSaturationStrategy());
+        strategies.add(new HeartRateStrategy());
 
         // an example personalized rule
         thresholdRules.put(1, new ThresholdRule("SystolicPressure", 90, 140));
@@ -50,94 +56,12 @@ public class AlertGenerator {
             return;
         }
 
-        checkThreshold(patient);
-        checkOxygen(patient);
-        checkTrend(patient);
-        checkECG(patient);
+        for(AlertStrategy strategy : strategies){
+            strategy.checkAlert(patient);
+        }
         checkCombination(patient);
     }
 
-    private void checkThreshold(Patient patient) {
-        List<PatientRecord> records = patient.getRecords(0, Long.MAX_VALUE);
-
-        for (PatientRecord record : records) {
-            double val = record.getMeasurementValue();
-            String type = record.getRecordType();
-
-            if (type.equals("SystolicPressure") && (val > 180 || val < 90)) {
-                triggerAlert(new Alert(String.valueOf(patient.getPatientId()), "Critical Systolic BP",
-                        record.getTimestamp()));
-            }
-
-            if (type.equals("DiastolicPressure") && (val > 120 || val < 60)) {
-                triggerAlert(new Alert(String.valueOf(patient.getPatientId()), "Critical Diastolic BP",
-                        record.getTimestamp()));
-            }
-        }
-
-    }
-
-    private void checkOxygen(Patient patient) {
-        List<PatientRecord> records = patient.getRecords(System.currentTimeMillis() - 600000,
-                System.currentTimeMillis());
-
-        for (PatientRecord r : records) {
-            if (r.getRecordType().equals("Saturation") && r.getMeasurementValue() < 92) {
-                triggerAlert(
-                        new Alert(String.valueOf(patient.getPatientId()), "Low oxygen saturation", r.getTimestamp()));
-            }
-        }
-    }
-
-    private void checkTrend(Patient patient) {
-        List<PatientRecord> records = patient.getRecords(0, Long.MAX_VALUE);
-
-        if (records.size() < 3)
-            return;
-
-        for (int i = 2; i < records.size(); i++) {
-            String type1 = records.get(i - 2).getRecordType();
-            String type2 = records.get(i - 1).getRecordType();
-            String type3 = records.get(i).getRecordType();
-
-            if (type1.equals(type2) && type2.equals(type3)) {
-                double a = records.get(i - 2).getMeasurementValue();
-                double b = records.get(i - 1).getMeasurementValue();
-                double c = records.get(i).getMeasurementValue();
-
-                boolean increasing = (b - a > 10) && (c - b > 10);
-                boolean decreasing = (a - b > 10) && (b - c > 10);
-
-                if (increasing || decreasing) {
-                    triggerAlert(new Alert(String.valueOf(patient.getPatientId()), "Trend Alert",
-                            records.get(i).getTimestamp()));
-                }
-            }
-        }
-    }
-
-    private void checkECG(Patient patient) {
-        List<PatientRecord> records = patient.getRecords(0, Long.MAX_VALUE);
-        List<PatientRecord> ecgRecords = records.stream().filter(r -> r.getRecordType().equals("ECG")).toList();
-
-        if (ecgRecords.size() < 2) {
-            return;
-        }
-
-        double sum = 0;
-        for (PatientRecord r : ecgRecords) {
-            sum += r.getMeasurementValue();
-        }
-
-        double avg = sum / ecgRecords.size();
-
-        for (PatientRecord r : ecgRecords) {
-            if (r.getMeasurementValue() > avg * 2) {
-                triggerAlert(new Alert(String.valueOf(patient.getPatientId()), "ECG abnormal spike", r.getTimestamp()));
-                break;
-            }
-        }
-    }
 
     private void checkCombination(Patient patient) {
         List<PatientRecord> records = patient.getRecords(0, System.currentTimeMillis());
@@ -167,6 +91,7 @@ public class AlertGenerator {
 
         alertManager.dispatchAlert(alert);
     }
+    
 
     /**
      * Adds or updates a threshold rule for a patient.
