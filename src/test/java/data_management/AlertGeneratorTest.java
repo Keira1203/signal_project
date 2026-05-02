@@ -13,7 +13,7 @@ public class AlertGeneratorTest {
     @Test
     void testNoThresholdRule() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = new BasicAlertGenerator(storage);
         Patient patient = new Patient(999);
         generator.evaluateData(patient);
 
@@ -23,7 +23,7 @@ public class AlertGeneratorTest {
     @Test
     void testThresholdBreached() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = new BasicAlertGenerator(storage);
         Patient patient = new Patient(1);
         patient.addRecord(200, "SystolicPressure", System.currentTimeMillis());
 
@@ -36,7 +36,7 @@ public class AlertGeneratorTest {
     @Test
     void testDoesNotCrushWithValidInput() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = new BasicAlertGenerator(storage);
 
         Patient patient = new Patient(2);
         patient.addRecord(120, "SystolicPressure", System.currentTimeMillis());
@@ -47,7 +47,7 @@ public class AlertGeneratorTest {
     @Test
     void testThresholdAlert() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = new BasicAlertGenerator(storage);
 
         Patient patient = new Patient(1);
         patient.addRecord(50, "SystolicPressure", System.currentTimeMillis());
@@ -60,7 +60,7 @@ public class AlertGeneratorTest {
     @Test
     void testLowOxygen() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = new BasicAlertGenerator(storage);
 
         Patient patient = new Patient(1);
         patient.addRecord(80, "Saturation", System.currentTimeMillis());
@@ -73,7 +73,7 @@ public class AlertGeneratorTest {
     @Test
     void testTrendAlert() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = Generator(storage);
         Patient patient = new Patient(1);
         long t = System.currentTimeMillis();
 
@@ -90,7 +90,7 @@ public class AlertGeneratorTest {
     @Test
     void testECGAlert() {
         DataStorage storage = new DataStorage();
-        AlertGenerator generator = new AlertGenerator(storage);
+        AlertGenerator generator = Generator(storage);
         Patient patient = new Patient(1);
         long t = System.currentTimeMillis();
         patient.addRecord(10, "ECG", t);
