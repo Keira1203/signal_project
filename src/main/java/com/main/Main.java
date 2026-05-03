@@ -17,7 +17,7 @@ public class Main {
     }
 
     private static void parseAndAnalyze() throws IOException {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         FileDataReader reader = new FileDataReader("output");
         AlertGenerator alertGenerator = new AlertGenerator(storage);
 

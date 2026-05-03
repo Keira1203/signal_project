@@ -73,7 +73,7 @@ public class AlertGenerator {
                 .anyMatch(r -> r.getRecordType().equals("Saturation") && r.getMeasurementValue() < 92);
 
         if (lowBP && lowOxygen) {
-            triggerAlert(new Alert(String.valueOf(patient.getPatientId()), "Hypotensive Hypoxemia",
+            triggerAlert(new BasicAlert(String.valueOf(patient.getPatientId()), "Hypotensive Hypoxemia",
                     System.currentTimeMillis()));
         }
     }

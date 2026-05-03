@@ -15,7 +15,7 @@ class DataStorageTest {
     void testAddAndGetRecords() {
         // TODO: A mock data reader could be added in a future test setup.
         // DataReader reader
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         storage.addPatientData(1, 100.0, "WhiteBloodCells", 1714376789050L);
         storage.addPatientData(1, 200.0, "WhiteBloodCells", 1714376789051L);
 
@@ -26,14 +26,14 @@ class DataStorageTest {
 
     @Test
     void testGetRecordsEmpty() {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         List<PatientRecord> records = storage.getRecords(999, 0, 10000);
         assertTrue(records.isEmpty());
     }
 
     @Test
     void testMultiplePatient() {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         storage.addPatientData(1, 100, "HeartRate", 1000);
         storage.addPatientData(2, 200, "HeartRate", 1000);
         assertEquals(1, storage.getRecords(1, 0, 2000).size());
@@ -42,7 +42,7 @@ class DataStorageTest {
 
     @Test
     void testTimeFiltering() {
-        DataStorage storage = new DataStorage();
+        DataStorage storage = DataStorage.getInstance();
         storage.addPatientData(1, 100, "HeartRate", 1000);
         storage.addPatientData(1, 200, "HeartRate", 5000);
         List<PatientRecord> records = storage.getRecords(1, 0, 2000);
