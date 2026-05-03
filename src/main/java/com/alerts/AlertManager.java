@@ -50,4 +50,8 @@ public class AlertManager {
         return alerts;
     }
 
+    public void clearAlerts(){
+        this.alerts.clear();
+    }
+
 }

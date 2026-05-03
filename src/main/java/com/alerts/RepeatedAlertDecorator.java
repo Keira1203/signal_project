@@ -7,7 +7,7 @@ public class RepeatedAlertDecorator extends AlertDecorator{
 
     @Override
     public String getCondition(){
-        return super.getCondition() + "[REPEATED]";
+        return super.getCondition() + " [REPEATED]";
     }
     
 }

@@ -1,14 +1,29 @@
 package data_management;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.BeforeEach;
 
 import com.data_management.DataStorage;
 import com.data_management.Patient;
+import com.alerts.Alert;
+import com.alerts.AlertFactory;
 import com.alerts.AlertGenerator;
+import com.alerts.BloodPressureAlert;
+import com.alerts.BloodPressureAlertFactory;
+import com.alerts.RepeatedAlertDecorator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class AlertGeneratorTest {
+    private AlertGenerator generator;
+    @BeforeEach
+    void setUp(){
+        DataStorage.getInstance().reset();
+        this.generator = new AlertGenerator(DataStorage.getInstance());
+        if (generator.getAlertManager() != null) {
+            generator.getAlertManager().clearAlerts();
+        }
+    }
 
     @Test
     void testNoThresholdRule() {
@@ -115,6 +130,24 @@ public class AlertGeneratorTest {
 
         assertTrue(generator.getAlertManager().getAlerts().stream()
                 .anyMatch(a -> a.getCondition().contains("Hypotensive Hypoxemia")));
+    }
+
+    @Test 
+    void testRepeatedAlertDecorator(){
+        //Test either the decorator can repeat
+        Alert basicAlert = new BloodPressureAlert("1", "High BP", System.currentTimeMillis());
+        RepeatedAlertDecorator decoratedAlert = new RepeatedAlertDecorator(basicAlert);
+
+        assertTrue(decoratedAlert.getCondition().toLowerCase().contains("repeated"));
+    }
+
+    @Test
+    void testBloodPressureAlertFactory(){
+        //check wether Factory patters generates the correct alert
+        AlertFactory factory = new BloodPressureAlertFactory();
+        Alert alert = factory.createAlert("1", "High BP", System.currentTimeMillis());
+    
+        assertTrue(alert instanceof BloodPressureAlert);
     }
 
 }

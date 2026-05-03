@@ -123,4 +123,7 @@ public class DataStorage {
         }
     }
 
+    public void reset(){
+        this.patientMap.clear();
+    }
 }
