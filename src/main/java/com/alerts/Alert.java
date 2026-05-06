@@ -2,9 +2,9 @@ package com.alerts;
 
 public interface Alert {
 
-    String getPatientId();
+  String getPatientId();
 
-    String getCondition();
+  String getCondition();
 
-    long getTimestamp();
+  long getTimestamp();
 }
