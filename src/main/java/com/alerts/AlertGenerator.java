@@ -57,7 +57,7 @@ public class AlertGenerator {
   }
 
   private void checkCombination(Patient patient) {
-    List<PatientRecord> records = patient.getRecords(0, System.currentTimeMillis());
+    List<PatientRecord> records = patient.getRecords(0, Long.MAX_VALUE);
 
     boolean lowBP =
         records.stream()

@@ -118,6 +118,8 @@ public class DataStorage {
   }
 
   public void reset() {
-    this.patientMap.clear();
+    if (this.patientMap != null) {
+      this.patientMap.clear();
+    }
   }
 }

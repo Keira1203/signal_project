@@ -5,13 +5,18 @@ import static org.junit.jupiter.api.Assertions.*;
 import com.data_management.DataStorage;
 import com.data_management.PatientRecord;
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 class DataStorageTest {
 
+  @BeforeEach
+  void setUp() {
+    DataStorage.getInstance().reset(); // Clear storage before each test
+  }
+
   @Test
   void testAddAndGetRecords() {
-    // TODO: A mock data reader could be added in a future test setup.
     // DataReader reader
     DataStorage storage = DataStorage.getInstance();
     storage.addPatientData(1, 100.0, "WhiteBloodCells", 1714376789050L);

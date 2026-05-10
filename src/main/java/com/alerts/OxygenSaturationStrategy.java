@@ -10,7 +10,7 @@ public class OxygenSaturationStrategy implements AlertStrategy {
   @Override
   public void checkAlert(Patient patient) {
     List<PatientRecord> records =
-        patient.getRecords(System.currentTimeMillis() - 600000, System.currentTimeMillis());
+        patient.getRecords(0, Long.MAX_VALUE); // Get all records for the patient);
 
     for (PatientRecord r : records) {
       if (r.getRecordType().equals("Saturation") && r.getMeasurementValue() < 92) {

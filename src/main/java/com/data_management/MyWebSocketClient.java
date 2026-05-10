@@ -4,6 +4,12 @@ import java.net.URI;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+/**
+ * MyWebSocketClient is responsible for connecting to a WebSocket server, receiving data messages,
+ * parsing them, and storing the relevant information in the DataStorage. It handles connection
+ * events, message parsing, and error handling to ensure that incoming data is processed correctly
+ * and that any issues with the WebSocket connection are logged appropriately.
+ */
 public class MyWebSocketClient extends WebSocketClient {
   private DataStorage storage;
 
@@ -19,16 +25,19 @@ public class MyWebSocketClient extends WebSocketClient {
 
   @Override
   public void onMessage(String message) {
+    if (message == null || message.trim().isEmpty()) {
+      System.err.println("Received empty message, ignoring.");
+      return;
+    }
     // Incoming data messages are formatted correctly and parsed
     try {
       parseAndStoreMessage(message);
     } catch (Exception e) {
-      System.err.println("Error parsing message: " + message);
+      System.err.println("Error parsing message: " + message + " | Error: " + e.getMessage());
     }
   }
 
   private void parseAndStoreMessage(String message) {
-    System.out.println("RAW MESSAGE: " + message);
     String[] parts = message.split(",");
     if (parts.length == 4) {
       try {
