@@ -38,13 +38,25 @@ public class AlertManager {
    * @param alert the alert being sent
    */
   public void notifyStaff(Alert alert) {
+    String style = "\u001B[41;37m"; // Red background with white text
+    String condition = alert.getCondition();
+    if (condition.contains("ECG")) {
+      style = "\u001B[43;30m"; // Yellow background with black text
+    } else if (condition.contains("Oxygen")) {
+      style = "\u001B[44;37m"; // Blue background with white text
+    } else if (condition.contains("Blood Pressure")) {
+      style = "\u001B[45;37m"; // Magenta background with white text
+    }
+    String reset = "\u001B[0m"; // Reset to default
     System.out.println(
-        "Dispatching alert for patient "
+        style
+            + "ALERT: Patient "
             + alert.getPatientId()
-            + " | condition: "
+            + " has condition: "
             + alert.getCondition()
-            + " | timestamp: "
-            + alert.getTimestamp());
+            + " at "
+            + alert.getTimestamp()
+            + reset);
   }
 
   public List<Alert> getAlerts() {
