@@ -49,6 +49,16 @@ public class AlertGenerator {
     if (patient == null) {
       return;
     }
+    List<PatientRecord> records = patient.getRecords(0, Long.MAX_VALUE);
+    for (PatientRecord record : records) {
+      if (record.getRecordType().equals("Manual")) {
+        triggerAlert(
+            new BasicAlert(
+                String.valueOf(patient.getPatientId()),
+                "Manual Alert Triggered",
+                record.getTimestamp()));
+      }
+    }
 
     for (AlertStrategy strategy : strategies) {
       strategy.checkAlert(patient);

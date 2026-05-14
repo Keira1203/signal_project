@@ -1,5 +1,6 @@
 package com.data_management;
 
+import com.alerts.Alert;
 import com.alerts.AlertGenerator;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -82,33 +83,37 @@ public class DataStorage {
   public static void main(String[] args) {
     // DataReader is not defined in this scope, should be initialized appropriately.
     // DataReader reader = new SomeDataReaderImplementation("path/to/data");
-    DataStorage storage = new DataStorage();
+    DataStorage storage = DataStorage.getInstance();
+    storage.reset(); // Clear any existing data in storage before starting
+    System.out.println("Reading data into storage...");
+    long now = System.currentTimeMillis();
+    storage.addPatientData(1, 85.0, "Saturation", now);
+    storage.addPatientData(1, 1.0, "Manual", now + 1000);
+    AlertGenerator alertGenerator = new AlertGenerator(storage);
+    System.out.println("Evaluating patient data for alerts...");
+    for (Patient patient : storage.getAllPatients()) {
+      alertGenerator.evaluateData(patient);
+    }
+
+    List<Alert> alerts = alertGenerator.getAlertManager().getAlerts();
+    if (alerts.isEmpty()) {
+      System.out.println("No alerts generated.");
+    } else {
+      System.out.println("Generated Alerts:");
+      for (Alert alert : alerts) {
+        System.out.println(
+            "Alert for Patient ID: "
+                + alert.getPatientId()
+                + ", Type: "
+                + alert.getCondition()
+                + ", Timestamp: "
+                + alert.getTimestamp());
+      }
+    }
 
     // Assuming the reader has been properly initialized and can read data into the
     // storage
     // reader.readData(storage);
-
-    // Example of using DataStorage to retrieve and print records for a patient
-    List<PatientRecord> records = storage.getRecords(1, 1700000000000L, 1800000000000L);
-    for (PatientRecord record : records) {
-      System.out.println(
-          "Record for Patient ID: "
-              + record.getPatientId()
-              + ", Type: "
-              + record.getRecordType()
-              + ", Data: "
-              + record.getMeasurementValue()
-              + ", Timestamp: "
-              + record.getTimestamp());
-    }
-
-    // Initialize the AlertGenerator with the storage
-    AlertGenerator alertGenerator = new AlertGenerator(storage);
-
-    // Evaluate all patients' data to check for conditions that may trigger alerts
-    for (Patient patient : storage.getAllPatients()) {
-      alertGenerator.evaluateData(patient);
-    }
   }
 
   public void deleteOldRecords(RetentionPolicy policy) {
